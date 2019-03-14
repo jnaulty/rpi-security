@@ -4,7 +4,7 @@ import logging
 from datetime import timedelta
 from threading import Lock
 import time
-
+from urllib.request import urlopen
 
 logger = logging.getLogger()
 
@@ -65,6 +65,9 @@ class RpisState(object):
         else:
             self.update_state('disarmed')
 
+    def _get_public_ip(self):
+        return urlopen("http://ip.42.pl/raw").read().decode("utf-8")
+
     def generate_status_text(self):
         return (
             "*rpi-security status*\n"
@@ -74,6 +77,7 @@ class RpisState(object):
             "Uptime: _{3}_ \n"
             "Last MAC detected: _{4} {5} ago_ \n"
             "Alarm triggered: _{6}_ \n"
+            "Public IP: {7}\n"
             ).format(
                     self.current,
                     self.previous,
@@ -81,5 +85,6 @@ class RpisState(object):
                     self._get_readable_delta(self.start_time),
                     self.last_mac,
                     self._get_readable_delta(self.last_packet),
-                    self.triggered
+                    self.triggered,
+                    self._get_public_ip()
                 )
