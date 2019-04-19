@@ -24,7 +24,7 @@ setup(
         'picamera',
         'imutils',
         'numpy',
-        'configparser',
+        'configparser==3.7.3',
         'requests',
         'requests[security]',
         'netaddr',
